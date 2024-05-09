@@ -4,8 +4,8 @@ from django.conf import settings
 
 # Create your models here.
 class Category(models.Model):
-    category_name = models.CharField(max_length=20, null=False, unique=True)
-    image = models.FileField(upload_to='img_category/')
+    category_name = models.CharField(max_length=20, null=False)
+    image = models.FileField(upload_to='img_category/', blank=True)
 
     def __str__(self):
         return self.category_name
@@ -16,7 +16,7 @@ class Product(models.Model):
     title = models.CharField(max_length=64)
     category = models.ForeignKey('Category', on_delete=models.CASCADE, null=False)
     description = models.CharField(max_length=512)
-    image = models.ManyToManyField('Image', null=True)
+    image = models.ManyToManyField('Image', blank=True)
     location_product = models.ForeignKey('City', on_delete=models.CASCADE, null=False)
     price = models.FloatField()
     active = models.BooleanField(default=False)

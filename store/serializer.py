@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from .models import (
     Category,
     Product,
@@ -7,35 +7,43 @@ from .models import (
 )
 
 
-class CategorySerializer(ModelSerializer):
-
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ('id', 'category_name', 'image')
 
 
-class ImageSerializer(ModelSerializer):
-
+class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = '__all__'
+        fields = ('url',)
 
 
-class CitySerializer(ModelSerializer):
-
+class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
-        fields = '__all__'
+        fields = ('id', 'location')
 
 
-class ProductSerializer(ModelSerializer):
-    image = ImageSerializer(many=True)
+class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     location_product = CitySerializer()
+    image = ImageSerializer(many=True, required=False)
 
     class Meta:
         model = Product
-        fields = [
-            'id', 'user', 'title', 'category', 'description', 'image', 'location_product', 'price', 'active', 'date'
-        ]
-        read_only_fields = ['id', 'category']
+        fields = ('id', 'title', 'category', 'user', 'description', 'location_product', 'image', 'price', 'active')
+
+    def create(self, validated_data):
+        print(validated_data)
+        category_data = validated_data.pop('category')
+        location_data = validated_data.pop('location_product')
+        images_data = validated_data.pop('image', None)
+
+        category = Category.objects.get(category_name=category_data.get('category_name'))
+        location = City.objects.get(location=location_data.get('location'))
+
+        image = ImageSerializer(**images_data)
+        product = Product.objects.create(category=category, location_product=location, image=image, **validated_data)
+
+        return product
