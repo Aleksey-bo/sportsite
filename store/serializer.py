@@ -43,7 +43,12 @@ class ProductSerializer(serializers.ModelSerializer):
         category = Category.objects.get(category_name=category_data.get('category_name'))
         location = City.objects.get(location=location_data.get('location'))
 
-        image = ImageSerializer(**images_data)
-        product = Product.objects.create(category=category, location_product=location, image=image, **validated_data)
+        product = Product.objects.create(category=category, location_product=location, **validated_data)
+
+        if images_data:
+            for image_data in images_data:
+                url = image_data.get('url')
+                image = Image.objects.create(url=url)
+                product.image.add(image)
 
         return product
