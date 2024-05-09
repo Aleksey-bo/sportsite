@@ -63,7 +63,9 @@ MIDDLEWARE = [
     'drf_api_logger.middleware.api_logger_middleware.APILoggerMiddleware'
 ]
 
-CORS_ORIGIN_WHITELIST = []
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:5173'
+]
 
 ROOT_URLCONF = 'server.urls'
 
