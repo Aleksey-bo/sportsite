@@ -10,7 +10,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ['username', 'password', 'password2', 'email', 'first_name', 'last_name']
+        fields = ['username', 'password', 'password2', 'email', 'first_name', 'last_name', 'phone_number']
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True}
@@ -27,7 +27,8 @@ class RegisterSerializer(serializers.ModelSerializer):
             username=validated_data['username'],
             email=validated_data['email'],
             first_name=validated_data['first_name'],
-            last_name=validated_data['last_name']
+            last_name=validated_data['last_name'],
+            phone_number=validated_data['phone_number']
         )
 
         user.set_password(validated_data['password'])

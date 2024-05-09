@@ -5,6 +5,7 @@ from .models import (
     Image,
     City
 )
+from account.serializer import UserSerializer
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -29,13 +30,13 @@ class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     location_product = CitySerializer()
     image = ImageSerializer(many=True, required=False)
+    user = UserSerializer()
 
     class Meta:
         model = Product
         fields = ('id', 'title', 'category', 'user', 'description', 'location_product', 'image', 'price', 'active')
 
     def create(self, validated_data):
-        print(validated_data)
         category_data = validated_data.pop('category')
         location_data = validated_data.pop('location_product')
         images_data = validated_data.pop('image', None)
@@ -47,8 +48,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
         if images_data:
             for image_data in images_data:
-                url = image_data.get('url')
-                image = Image.objects.create(url=url)
+                image = Image.objects.create(image_data)
                 product.image.add(image)
 
         return product
