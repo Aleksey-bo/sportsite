@@ -22,7 +22,7 @@ class ImageSerializer(serializers.ModelSerializer):
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
-        fields = ('id', 'location')
+        fields = ['id', 'location']
 
 
 class ProductSerializer(serializers.ModelSerializer):

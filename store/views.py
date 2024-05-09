@@ -5,11 +5,13 @@ from rest_framework.permissions import AllowAny
 from .permission import IsAuthenticatedOrCreateOnly
 from .models import (
     Product,
-    Category
+    Category,
+    City
 )
 from .serializer import (
     ProductSerializer,
-    CategorySerializer
+    CategorySerializer,
+    CitySerializer
 )
 
 
@@ -17,6 +19,12 @@ from .serializer import (
 class ListCategory(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = [AllowAny]
+
+
+class ListCity(ListAPIView):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
     permission_classes = [AllowAny]
 
 
