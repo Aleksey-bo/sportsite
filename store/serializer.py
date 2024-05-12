@@ -6,7 +6,6 @@ from .models import (
     City
 )
 from account.serializer import UserSerializer
-from account.models import CustomUser
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -37,21 +36,18 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ('id', 'title', 'category', 'user', 'description', 'location_product', 'image', 'price', 'active')
 
+
+class ProductCreateSerializer(serializers.ModelSerializer):
+    image = serializers.ListField(child=serializers.ImageField(), write_only=True, required=False)
+
+    class Meta:
+        model = Product
+        fields = ('title', 'category', 'user', 'description', 'location_product', 'price', 'active', 'image')
+
     def create(self, validated_data):
-        category_data = validated_data.pop('category')
-        location_data = validated_data.pop('location_product')
-        images_data = validated_data.pop('image', None)
-        user_data = validated_data.pop('user')
-
-        category = Category.objects.get(category_name=category_data.get('category_name'))
-        location = City.objects.get(location=location_data.get('location'))
-        user = CustomUser.objects.get(id=user_data)
-
-        product = Product.objects.create(category=category, location_product=location, user=user, **validated_data)
-
-        if images_data:
-            for image_data in images_data:
-                image = Image.objects.create(image_data)
-                product.image.add(image)
-
+        images_data = validated_data.pop('image', [])
+        product = Product.objects.create(**validated_data)
+        for image_data in images_data:
+            image = Image.objects.create(url=image_data)
+            product.image.add(image)
         return product

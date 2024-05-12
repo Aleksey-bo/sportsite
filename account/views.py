@@ -35,9 +35,17 @@ class GetCurrentUser(APIView):
     def get(request):
         return Response(UserSerializer(request.user).data)
 
-    def put(self):
-        pass
+    @staticmethod
+    def put(request):
+        serializer = UserSerializer(request.user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    def destroy(self):
-        pass
+    @staticmethod
+    def delete(request):
+        user = request.user
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 

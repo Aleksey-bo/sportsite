@@ -10,6 +10,7 @@ from .models import (
 )
 from .serializer import (
     ProductSerializer,
+    ProductCreateSerializer,
     CategorySerializer,
     CitySerializer
 )
@@ -31,6 +32,11 @@ class ListCity(ListAPIView):
 class ProductsView(ModelViewSet):
     queryset = Product.objects.filter(active=True)
     serializer_class = ProductSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return ProductCreateSerializer
+        return self.serializer_class
 
 # class ProductsView(ViewSet):
 #     @staticmethod
