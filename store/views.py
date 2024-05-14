@@ -2,6 +2,7 @@ from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from rest_framework import filters
 from .permission import IsAuthenticatedOrCreateOnly
 from .models import (
     Product,
@@ -32,6 +33,8 @@ class ListCity(ListAPIView):
 class ProductsView(ModelViewSet):
     queryset = Product.objects.filter(active=True)
     serializer_class = ProductSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title']
 
     def get_serializer_class(self):
         if self.action == 'create':
