@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import filters
 from .permission import IsAuthenticatedOrCreateOnly
+from server.pagination import Pagination
 from .models import (
     Product,
     Category,
@@ -35,6 +36,8 @@ class ProductsView(ModelViewSet):
     serializer_class = ProductSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['title']
+    pagination_class = Pagination
+
 
     def get_serializer_class(self):
         if self.action == 'create':
