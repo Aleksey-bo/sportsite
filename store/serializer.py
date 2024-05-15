@@ -51,3 +51,6 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             image = Image.objects.create(url=image_data)
             product.image.add(image)
         return product
+
+    def update(self, instance, validated_data):
+        pass
