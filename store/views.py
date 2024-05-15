@@ -38,6 +38,7 @@ class ProductsView(ModelViewSet):
     search_fields = ['title']
     filterset_fields = ['category__category_name']
     pagination_class = Pagination
+    permission_classes = [IsAuthenticatedOrCreateOnly]
 
     def get_serializer_class(self):
         if self.action == 'create':
