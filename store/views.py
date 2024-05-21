@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .permission import IsAuthenticatedOrCreateOnly
-from server.pagination import Pagination
+from store.pagination import Pagination
 from .models import (
     Product,
     Category,
@@ -38,7 +38,7 @@ class ProductsView(ModelViewSet):
     search_fields = ['title']
     filterset_fields = ['category__category_name']
     pagination_class = Pagination
-    permission_classes = [IsAuthenticatedOrCreateOnly]
+    # permission_classes = [IsAuthenticatedOrCreateOnly]
 
     def get_serializer_class(self):
         if self.action == 'create':
