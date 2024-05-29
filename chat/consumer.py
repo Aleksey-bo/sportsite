@@ -3,7 +3,7 @@ import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from .models import Room, Message
-from django.contrib.auth.models import User
+from account.models import CustomUser
 
 
 class ChatConsumer(WebsocketConsumer):
@@ -27,7 +27,7 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
 
-        user = User.objects.get(id=1)
+        user = CustomUser.objects.get(id=3)
         room = Room.objects.get(id=1)
 
         Message.objects.create(user=user, room=room, content=message)
