@@ -1,9 +1,11 @@
 from django.db import models
 from django.conf import settings
+from store.models import Product
 
 # Create your models here.
 class Room(models.Model):
     unique_id = models.CharField(max_length=32)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     users = models.ManyToManyField(settings.AUTH_USER_MODEL)
 
     def __str__(self) -> str:
