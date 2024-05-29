@@ -37,11 +37,12 @@ class City(models.Model):
         return self.location
 
 
-class Order(models.Model):
-    # user = models.ForeignKey()
-    # product = models.ForeignKey()
-    # start_date = models.DateTimeField()
-    # end_date = models.DateTimeField()
-    # pay = models.BooleanField()
-    # order_date = models.DateTimeField(auto_now=True)
-    pass
+# class Order(models.Model):
+#     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
+#     product = models.ForeignKey('Product', on_delete=models.CASCADE)
+#     start_date = models.DateTimeField(auto_now=False)
+#     end_date = models.DateTimeField(auto_now=False)
+#     pay = models.BooleanField(default=False)
+#     bill = models.FileField(upload_to='bill/', null=False)
+#     order_date = models.DateTimeField(auto_now=True)
+

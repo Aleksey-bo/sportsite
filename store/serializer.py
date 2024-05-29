@@ -53,4 +53,22 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         return product
 
     def update(self, instance, validated_data):
-        pass
+        user_data = validated_data.pop('user', {})
+        product = Product.objects.filter(id=validated_data.get('id'))
+        category = Category.objects.filter(id=validated_data.get('category'))
+        city = City.objects.filter(id=validated_data.get('location_product'))
+
+        if product.user.id == user_data.get('id'):
+            instance.title = validated_data.get('title')
+            instance.description = validated_data.get('description')
+            if category:
+                instance.category = category
+            if city:
+                instance.location_product = city
+
+            instance.price = validated_data.get('price')
+            instance.active = validated_data.get('active')
+
+            instance.save()
+
+        return instance

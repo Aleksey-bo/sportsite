@@ -45,10 +45,11 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_api_logger',
     'django_filters',
-    # 'channels',
+    'channels',
 
     'account',
     'store',
+    'chat'
 
 ]
 
@@ -195,3 +196,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'account.CustomUser'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
