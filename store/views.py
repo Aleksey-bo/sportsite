@@ -49,6 +49,10 @@ class ProductsView(ModelViewSet):
     
 
 class OrderView(ListAPIView, CreateAPIView):
-    queryset = Order.objects.filter(pay=True)
     serializer_class = OrderSerializer
     # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user_id = self.request.user
+        queryset = Order.objects.filter(user=user_id.id, pay=True)
+        return queryset
