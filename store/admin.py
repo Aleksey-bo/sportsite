@@ -4,7 +4,7 @@ from .models import (
     Product,
     City,
     Image,
-    # Order
+    Order
 )
 
 # Register your models here.
@@ -12,4 +12,4 @@ admin.site.register(Category)
 admin.site.register(Product)
 admin.site.register(City)
 admin.site.register(Image)
-# admin.site.register(Order)
+admin.site.register(Order)

@@ -1,9 +1,11 @@
+from uuid import uuid4
 from rest_framework import serializers
 from .models import (
     Category,
     Product,
     Image,
-    City
+    City,
+    Order
 )
 from account.serializer import UserSerializer
 
@@ -72,3 +74,21 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             instance.save()
 
         return instance
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    unique_id = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = Order
+        fields = ['id', 'unique_id', 'user', 'product', 'start_date', 'end_date', 'pay', 'bill']
+
+    def create(self, validated_data):
+        order = Order.objects.create(unique_id=uuid4(), **validated_data)
+        product = Product.objects.get(title=validated_data.get('product'))
+
+        if order and product:
+            product.active = False
+            product.save()
+
+        return order

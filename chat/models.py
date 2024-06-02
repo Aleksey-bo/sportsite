@@ -6,7 +6,8 @@ from store.models import Product
 class Room(models.Model):
     unique_id = models.CharField(max_length=32)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    seller = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='rooms_selling', on_delete=models.CASCADE)
+    client = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='rooms_buying', on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return f'{self.unique_id}'

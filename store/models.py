@@ -1,3 +1,5 @@
+from uuid import uuid4
+from typing import Iterable
 from django.db import models
 from django.conf import settings
 
@@ -37,12 +39,16 @@ class City(models.Model):
         return self.location
 
 
-# class Order(models.Model):
-#     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
-#     product = models.ForeignKey('Product', on_delete=models.CASCADE)
-#     start_date = models.DateTimeField(auto_now=False)
-#     end_date = models.DateTimeField(auto_now=False)
-#     pay = models.BooleanField(default=False)
-#     bill = models.FileField(upload_to='bill/', null=False)
-#     order_date = models.DateTimeField(auto_now=True)
+class Order(models.Model):
+    unique_id = models.CharField(max_length=64)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    start_date = models.DateTimeField(auto_now=False)
+    end_date = models.DateTimeField(auto_now=False)
+    pay = models.BooleanField(default=False)
+    bill = models.FileField(upload_to='bill/', null=False)
+    order_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.unique_id}"
 
