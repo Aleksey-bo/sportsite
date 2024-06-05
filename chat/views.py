@@ -1,10 +1,10 @@
 from uuid import uuid4
-from django.db.models import Q
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Room
 from account.models import CustomUser
+from store.models import Product
 
 
 # Create your views here.
@@ -19,7 +19,10 @@ class RoomView(APIView):
         room = Room.objects.filter(product=product_data, seller=seller_data, client=client_data).first()
 
         if not room:
-            room = Room.objects.create(unique_id=uuid4(), users=(seller_data,client_data))
+            product = Product.objects.get(id=product_data)
+            seller = CustomUser.objects.get(id=seller_data)
+            client = CustomUser.objects.get(id=client_data)
+            room = Room.objects.create(unique_id=uuid4(), product=product, seller=seller, client=client)
             return Response({"id": room.id, "unique_id": room.unique_id})
         
         return Response({"id": room.id, "unique_id": room.unique_id})

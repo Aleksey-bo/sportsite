@@ -8,6 +8,7 @@ from .models import (
     Order
 )
 from account.serializer import UserSerializer
+from account.models import CustomUser
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -55,6 +56,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         return product
 
     def update(self, instance, validated_data):
+        print(validated_data)
         user_data = validated_data.pop('user', {})
         product = Product.objects.filter(id=validated_data.get('id'))
         category = Category.objects.filter(id=validated_data.get('category'))
@@ -78,14 +80,17 @@ class ProductCreateSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     unique_id = serializers.CharField(read_only=True)
+    bill = serializers.FileField(read_only=True)
 
     class Meta:
         model = Order
         fields = ['id', 'unique_id', 'user', 'product', 'start_date', 'end_date', 'pay', 'bill']
 
     def create(self, validated_data):
-        order = Order.objects.create(unique_id=uuid4(), **validated_data)
         product = Product.objects.get(title=validated_data.get('product'))
+        user = CustomUser.objects.get(id=validated_data.get('user'))
+        order = Order.objects.create(unique_id=uuid4(), product=product, user=user, **validated_data)
+        
 
         if order and product:
             product.active = False

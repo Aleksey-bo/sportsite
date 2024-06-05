@@ -39,7 +39,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     phone_number = serializers.CharField()
-    avatar = serializers.ImageField()
+    avatar = serializers.ImageField(required=False)
 
     class Meta:
         model = get_user_model()
