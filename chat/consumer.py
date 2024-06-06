@@ -41,17 +41,19 @@ class ChatConsumer(WebsocketConsumer):
         )
     
     def chat_message(self, event):
-        user = event["user"]
-        room = event["room"]
-        message = event["message"]
-        self.send(text_data=json.dumps({"user": user, "room": room, "message": message}))
+        self.send(text_data=json.dumps({
+            "user": event["user"], "room": event["room"], "message": event["message"]
+            }))
 
     def send_message_history(self):
         messages = Message.objects.filter(room__unique_id=self.room_name)
+        message_list = []
 
         for message in messages:
-            self.send(text_data=json.dumps({
+            message_list.append({
                 "user": message.user.id,
                 "room": message.room.id,
                 "message": message.content,
-            }))
+            })
+
+        self.send(text_data=json.dumps({"message_history": message_list}))

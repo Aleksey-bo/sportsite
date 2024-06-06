@@ -1,4 +1,3 @@
-from uuid import uuid4
 from rest_framework import serializers
 from .models import (
     Category,
@@ -90,7 +89,7 @@ class OrderSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         product = Product.objects.get(title=validated_data.get('product'))
         user = CustomUser.objects.get(id=validated_data.get('user'))
-        order = Order.objects.create(unique_id=uuid4(), product=product, user=user, **validated_data)
+        order = Order.objects.create(product=product, user=user, **validated_data)
         
         if order and product:
             product.active = False
