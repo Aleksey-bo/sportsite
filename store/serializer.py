@@ -85,6 +85,7 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'unique_id', 'user', 'product', 'start_date', 'end_date', 'pay', 'bill']
+        read_only_fields = ['id']
 
     def create(self, validated_data):
         product = Product.objects.get(title=validated_data.get('product'))
