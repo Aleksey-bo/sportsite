@@ -92,7 +92,6 @@ class OrderSerializer(serializers.ModelSerializer):
         user = CustomUser.objects.get(id=validated_data.get('user'))
         order = Order.objects.create(unique_id=uuid4(), product=product, user=user, **validated_data)
         
-
         if order and product:
             product.active = False
             product.save()
