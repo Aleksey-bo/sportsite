@@ -16,6 +16,7 @@ class ChatConsumer(WebsocketConsumer):
         )
 
         self.accept()
+        self.send_message_history()
 
     def disconnect(self, close_code):
         async_to_sync(self.channel_layer.group_discard)(
@@ -44,3 +45,13 @@ class ChatConsumer(WebsocketConsumer):
         room = event["room"]
         message = event["message"]
         self.send(text_data=json.dumps({"user": user, "room": room, "message": message}))
+
+    def send_message_history(self):
+        messages = Message.objects.filter(room__unique_id=self.room_name)
+
+        for message in messages:
+            self.send(text_data=json.dumps({
+                "user": message.user.id,
+                "room": message.room.id,
+                "message": message.content,
+            }))
