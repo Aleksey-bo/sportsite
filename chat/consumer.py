@@ -2,6 +2,8 @@ import json
 
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from django.db.models import Q
+from django.db.models.signals import post_save
 from .models import Room, Message
 from account.models import CustomUser
 
@@ -36,7 +38,7 @@ class ChatConsumer(WebsocketConsumer):
 
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name, {
-                "type": "chat_message", "user": msg.user.username, "room": room_id, "message": message
+                "type": "chat_message", "user": user_data, "room": room_id, "message": message
                 }
         )
     
@@ -57,3 +59,30 @@ class ChatConsumer(WebsocketConsumer):
             })
 
         self.send(text_data=json.dumps({"message_history": message_list}))
+
+
+class NotificationChat(WebsocketConsumer):
+    def connect(self):
+        self.username = self.scope["url_route"]["kwargs"]["username"]
+        self.accept()
+
+        post_save.connect(self.send_notification, sender=Message)
+
+    def disconnect(self, code):
+        pass
+
+    def send_notification(self, **kwargs):
+        user = CustomUser.objects.get(username=self.username)
+        rooms = Room.objects.filter(Q(seller=user.id) | Q(client=user.id))
+        notification_list = []
+
+        for room in rooms:
+            message = Message.objects.filter(room=room.id).last()
+
+            if user.id != message.user.id:
+                notification_list.append({"user": message.user.username, "room": message.room.id, "message": message.content})
+
+        notification_count = len(notification_list)
+        self.send(text_data=json.dumps({"notification_count": notification_count, "last_message": notification_list}))
+            
+
