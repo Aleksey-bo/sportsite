@@ -26,4 +26,9 @@ class RoomView(APIView):
             room = Room.objects.create(unique_id=unique_id, product=product, seller=seller, client=client)
             return Response({"id": room.id, "unique_id": room.unique_id})
         
-        return Response({"id": room.id, "unique_id": room.unique_id})
+        return Response({
+            "id": room.id,
+              "unique_id": room.unique_id,
+                "seller": room.seller.id,
+                  "client": room.client.id
+                  })

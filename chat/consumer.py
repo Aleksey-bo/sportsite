@@ -32,11 +32,11 @@ class ChatConsumer(WebsocketConsumer):
         user = CustomUser.objects.get(id=user_data)
         room = Room.objects.get(unique_id=room_id)
 
-        Message.objects.create(user=user, room=room, content=message)
+        msg = Message.objects.create(user=user, room=room, content=message)
 
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name, {
-                "type": "chat_message", "user": user_data, "room": room_id, "message": message
+                "type": "chat_message", "user": msg.user.username, "room": room_id, "message": message
                 }
         )
     
@@ -51,7 +51,7 @@ class ChatConsumer(WebsocketConsumer):
 
         for message in messages:
             message_list.append({
-                "user": message.user.id,
+                "user": message.user.username,
                 "room": message.room.id,
                 "message": message.content,
             })

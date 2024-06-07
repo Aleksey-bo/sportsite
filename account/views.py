@@ -24,18 +24,21 @@ class RegistrationAPIView(CreateAPIView):
 class GetCurrentUser(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self):
-        return Response(UserSerializer(self.request.user).data)
+    @staticmethod
+    def get(request):
+        return Response(UserSerializer(request.user).data)
 
-    def put(self):
-        serializer = UserSerializer(self.request.user, data=self.request.data)
+    @staticmethod
+    def put(request):
+        serializer = UserSerializer(request.user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self):
-        user = self.request.user
+    @staticmethod
+    def delete(request):
+        user = request.user
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
@@ -58,4 +61,3 @@ class GetUserChat(ListAPIView):
         user_id = self.request.user.id
         queryset = Room.objects.filter(Q(seller=user_id) | Q(client=user_id))
         return queryset.order_by('-id')
-    
