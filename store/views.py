@@ -53,6 +53,10 @@ class OrderView(ListAPIView, CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        if self.action in ['create']:
+            queryset = Order.objects.all()
+
         user_id = self.request.user
         queryset = Order.objects.filter(user=user_id.id, pay=True)
         return queryset
+    

@@ -2,6 +2,7 @@ from uuid import uuid4
 from typing import Iterable
 from django.db import models
 from django.conf import settings
+from django.core.mail import send_mail
 
 
 # Create your models here.
@@ -51,4 +52,14 @@ class Order(models.Model):
 
     def __str__(self):
         return f"{self.unique_id}"
+    
+    def save(self):
+        send_mail(
+            f"Order {self.unique_id}",
+            "Order",
+            settings.EMAIL_HOST_USER,
+            [f"{self.product.user.email}"],
+            fail_silently=False,
+        )
+        return super().save()
 

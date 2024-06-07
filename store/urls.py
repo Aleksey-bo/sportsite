@@ -4,7 +4,7 @@ from .views import (
     ListCategory,
     ListCity,
     ProductsView,
-    OrderView
+    OrderView,
 )
 
 router = DefaultRouter()

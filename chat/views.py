@@ -22,7 +22,8 @@ class RoomView(APIView):
             product = Product.objects.get(id=product_data)
             seller = CustomUser.objects.get(id=seller_data)
             client = CustomUser.objects.get(id=client_data)
-            room = Room.objects.create(unique_id=uuid4(), product=product, seller=seller, client=client)
+            unique_id = uuid4().hex
+            room = Room.objects.create(unique_id=unique_id, product=product, seller=seller, client=client)
             return Response({"id": room.id, "unique_id": room.unique_id})
         
         return Response({"id": room.id, "unique_id": room.unique_id})
