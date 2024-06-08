@@ -52,14 +52,3 @@ class Order(models.Model):
 
     def __str__(self):
         return f"{self.unique_id}"
-    
-    def save(self):
-        send_mail(
-            f"Order {self.unique_id}",
-            "Order",
-            settings.EMAIL_HOST_USER,
-            [f"{self.product.user.email}"],
-            fail_silently=False,
-        )
-        return super().save()
-

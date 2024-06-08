@@ -42,6 +42,11 @@ class ProductsView(ModelViewSet):
     pagination_class = Pagination
     permission_classes = [IsAuthenticatedOrCreateOnly]
 
+    def get_queryset(self):
+        if self.action == 'update':
+            return Product.objects.all()
+        return self.queryset
+
     def get_serializer_class(self):
         if self.action in ['create', 'update', 'destroy']:
             return ProductCreateSerializer
